@@ -1,0 +1,298 @@
+\documentclass[11pt,a4paper]{article}
+
+% Encoding and language
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english,russian]{babel}
+
+% Math
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{bm}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+% Algorithms (for pseudocode)
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\title{GRA-Core: Multiverse Nullification and Fractal Agents\\
+{\large Базовый стек GRA: мультиверсное обнуление и фрактальные агенты}}
+
+\author{AAA AAA}
+
+\date{February 2026}
+
+% Theorem environments
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\selectlanguage{english}
+We present \textbf{GRA-Core}, a minimal implementation of the GRA Multiverse
+Nullification architecture. The framework provides: (i) a multilevel foam
+nullification functional over tensorized state spaces, (ii) a fractal
+context engine for language and knowledge, and (iii) an agent runtime with
+GRA-style cognitive reset. We outline the core mathematical ideas and
+their differentiable realization in NumPy and JAX, accompanied by open-source
+notebooks for experimentation.
+
+\selectlanguage{russian}
+В работе представлен \textbf{GRA-Core} — минимальная реализация архитектуры
+мультиверсного обнуления GRA. Фреймворк включает: (i) многоуровневый
+функционал обнуления «пены» в тензорных пространствах состояний, (ii)
+фрактальный контекстный движок для языка и знаний и (iii) агентный
+рантайм с GRA-подобным когнитивным сбросом. Описаны основные математические
+идеи и их дифференцируемая реализация на NumPy и JAX, а также открытые
+ноутбуки для экспериментов.
+\end{abstract}
+
+\section{Introduction / Введение}
+
+\selectlanguage{english}
+Large-scale learning systems accumulate internal contradictions across
+layers, modules, and abstraction levels. This manifests as hallucinations,
+instabilities, and brittle behaviour. The GRA Multiverse Nullification
+principle treats these contradictions as ``foam'' between parallel
+state components and proposes a recursive nullification process over
+a multilevel hierarchy.
+
+\selectlanguage{russian}
+Крупномасштабные обучающиеся системы накапливают внутренние противоречия
+между слоями, модулями и уровнями абстракции. Это проявляется в виде
+галлюцинаций, нестабильности и хрупкого поведения. Принцип мультиверсного
+обнуления GRA трактует эти противоречия как «пену» между параллельными
+компонентами состояний и предлагает рекурсивный процесс обнуления
+на многоуровневой иерархии.
+
+\section{Multiverse State Space / Пространство состояний мультиверса}
+
+\selectlanguage{english}
+Let the multilevel index be
+\[
+\bm{a} = (a_0, a_1, \dots, a_k),
+\]
+where $a_0$ indexes domains, $a_1$ meta-systems, and so on up to
+level $k$. For each level $l$ we define
+\[
+\mathcal{H}^{(l)} = \bigotimes_{\bm{a}:\,\dim(\bm{a})=l} \mathcal{H}^{(\bm{a})},
+\quad
+\mathcal{H}_{\text{multiverse}} = \bigotimes_{l=0}^K \mathcal{H}^{(l)}.
+\]
+
+\selectlanguage{russian}
+Пусть мультииндекс имеет вид
+\[
+\bm{a} = (a_0, a_1, \dots, a_k),
+\]
+где $a_0$ индексирует домены, $a_1$ — мета-системы и т.д. до уровня $k$.
+Для каждого уровня $l$ определим
+\[
+\mathcal{H}^{(l)} = \bigotimes_{\bm{a}:\,\dim(\bm{a})=l} \mathcal{H}^{(\bm{a})},
+\quad
+\mathcal{H}_{\text{multiverse}} = \bigotimes_{l=0}^K \mathcal{H}^{(l)}.
+\]
+
+\section{Foam Functional / Функционал «пены»}
+
+\selectlanguage{english}
+For level $l$ and goal $G_l$ we introduce a projector
+$\mathcal{P}_{G_l}$ onto the solution subspace. The level-$l$ foam for
+a family of states $\{\Psi^{(\bm{a})}\}$ is
+\[
+\Phi^{(l)}(\Psi^{(l)}, G_l) =
+\sum_{\bm{a} \neq \bm{b} \atop \dim(\bm{a})=\dim(\bm{b})=l}
+\bigl|\langle \Psi^{(\bm{a})} \vert \mathcal{P}_{G_l} \vert
+\Psi^{(\bm{b})} \rangle\bigr|^2.
+\]
+
+\selectlanguage{russian}
+Для уровня $l$ и цели $G_l$ вводится проектор
+$\mathcal{P}_{G_l}$ на подпространство решений. Пена уровня $l$ для
+набора состояний $\{\Psi^{(\bm{a})}\}$ задаётся как
+\[
+\Phi^{(l)}(\Psi^{(l)}, G_l) =
+\sum_{\bm{a} \neq \bm{b} \atop \dim(\bm{a})=\dim(\bm{b})=l}
+\bigl|\langle \Psi^{(\bm{a})} \vert \mathcal{P}_{G_l} \vert
+\Psi^{(\bm{b})} \rangle\bigr|^2.
+\]
+
+\section{Nullification Principle / Принцип обнуления}
+
+\begin{definition}[Multiverse-consistent state / Мультиверсно-согласованное состояние]
+\selectlanguage{english}
+A multiverse state $\Psi \in \mathcal{H}_{\text{multiverse}}$ is called
+\emph{multiverse-consistent} if for all levels $l$ the foam functional
+vanishes:
+\[
+\Phi^{(l)}(\Psi^{(l)}, G_l) = 0.
+\]
+
+\selectlanguage{russian}
+Состояние мультивселенной $\Psi \in \mathcal{H}_{\text{multiverse}}$
+называется \emph{мультиверсно-согласованным}, если для всех уровней $l$
+функционал пены обращается в ноль:
+\[
+\Phi^{(l)}(\Psi^{(l)}, G_l) = 0.
+\]
+\end{definition}
+
+\begin{theorem}[Multiverse Nullification / Теорема мультиверсного обнуления]
+\selectlanguage{english}
+Assume that for each level $l$ and goal $G_l$ the projector
+$\mathcal{P}_{G_l}$ is self-adjoint and idempotent, and that the
+optimization dynamics performs a gradient-based descent on the total
+foam
+\[
+J(\Psi) = \sum_{l=0}^K \Lambda_l \,\Phi^{(l)}(\Psi^{(l)}, G_l),\quad
+\Lambda_l > 0.
+\]
+Then every limit point of the trajectory $\Psi_t$ under this descent
+is multiverse-consistent, i.e.\ satisfies $\Phi^{(l)}(\Psi^{(l)}, G_l) = 0$
+for all $l$.
+
+\selectlanguage{russian}
+Пусть для каждого уровня $l$ и цели $G_l$ проектор
+$\mathcal{P}_{G_l}$ самосопряжён и идемпотентен, а динамика оптимизации
+представляет собой градиентный спуск по суммарной пене
+\[
+J(\Psi) = \sum_{l=0}^K \Lambda_l \,\Phi^{(l)}(\Psi^{(l)}, G_l),\quad
+\Lambda_l > 0.
+\]
+Тогда любая предельная точка траектории $\Psi_t$ при таком спуске
+является мультиверсно-согласованной, то есть удовлетворяет
+$\Phi^{(l)}(\Psi^{(l)}, G_l) = 0$ для всех $l$.
+\end{theorem}
+
+\noindent
+\selectlanguage{english}
+\textbf{Sketch of proof.}
+The functional $J$ is non-negative and, under standard smoothness
+assumptions on the parametrization of $\Psi$, monotonically decreases
+along the gradient flow. Any limit point must therefore lie in the
+set of critical points of $J$. The structure of $\Phi^{(l)}$ implies
+that the only global minima are configurations in which all pairwise
+interference terms vanish, which is equivalent to $\Phi^{(l)}=0$ for
+all levels.
+
+\selectlanguage{russian}
+\textbf{Набросок доказательства.}
+Функционал $J$ неотрицателен и при стандартных предположениях о
+гладкости параметризации $\Psi$ монотонно убывает вдоль градиентного
+потока. Любая предельная точка должна лежать в множестве критических
+точек $J$. Структура $\Phi^{(l)}$ означает, что глобальные минимумы
+соответствуют конфигурациям, в которых все попарные интерференционные
+члены обнуляются, что эквивалентно выполнению $\Phi^{(l)}=0$ для
+всех уровней.
+
+\section{Algorithm / Алгоритм}
+
+\selectlanguage{english}
+Algorithm \ref{alg:gra-null} gives a high-level pseudocode for the
+GRA multiverse nullification process as implemented in the JAX layer
+of \texttt{gra-core}.
+
+\selectlanguage{russian}
+Алгоритм \ref{alg:gra-null} задаёт укрупнённый псевдокод процесса
+мультиверсного обнуления GRA в реализации JAX из \texttt{gra-core}.
+
+\begin{algorithm}[h]
+\caption{GRA Multiverse Nullification / Мультиверсное обнуление GRA}
+\label{alg:gra-null}
+\begin{algorithmic}[1]
+\STATE \textbf{Input / Вход:}
+\STATE \quad initial states $\Psi^{(l)}_0$ for all levels $l$
+\STATE \quad projectors $\mathcal{P}_{G_l}$, weights $\Lambda_l$, step size $\eta$
+\FOR{$t = 0, 1, 2, \dots, T$}
+  \STATE Compute multilevel foam:
+  \[
+    J(\Psi_t) = \sum_l \Lambda_l \,\Phi^{(l)}(\Psi^{(l)}_t, G_l)
+  \]
+  \STATE Compute gradient $\nabla_{\Psi} J(\Psi_t)$
+  \STATE Update states:
+  \[
+    \Psi_{t+1} = \Psi_t - \eta \,\nabla_{\Psi} J(\Psi_t)
+  \]
+  \IF{$J(\Psi_t) < \varepsilon$}
+    \STATE \textbf{break}
+  \ENDIF
+\ENDFOR
+\STATE \textbf{Output / Выход:} multiverse-consistent $\Psi_{T^\star}$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Case Studies / Кейсы}
+
+\subsection{Toy Nullification (NumPy) / Игрушечное обнуление (NumPy)}
+
+\selectlanguage{english}
+The notebook \texttt{nullify\_toy\_model.ipynb} instantiates a
+two-level multiverse with random four-dimensional states and a simple
+homogeneous projector. The evolution of $\Phi^{(0)}$ and
+$\Phi^{(1)}$ over iterations illustrates exponential-like decay of
+foam as states become aligned with the projector subspaces.
+
+\selectlanguage{russian}
+В ноутбуке \texttt{nullify\_toy\_model.ipynb} задаётся двухуровневый
+мультиверс со случайными четырёхмерными состояниями и простым
+однородным проектором. Эволюция $\Phi^{(0)}$ и $\Phi^{(1)}$ по
+итерациям демонстрирует почти экспоненциальное затухание пены при
+приближении состояний к подпространствам проекторов.
+
+\subsection{Differentiable JAX Layer / Дифференцируемый слой JAX}
+
+\selectlanguage{english}
+The JAX notebook \texttt{jax\_nullify\_toy.ipynb} treats the multilevel
+foam $J$ as a differentiable regularizer. Randomly initialized states
+are optimized by gradient descent, and the loss trajectory confirms
+that $J$ can be minimized efficiently with standard JAX tooling and
+integrated into larger models.
+
+\selectlanguage{russian}
+В JAX-ноутбуке \texttt{jax\_nullify\_toy.ipynb} многоуровневая пена
+$J$ выступает в роли дифференцируемого регуляризатора. Случайно
+инициализированные состояния оптимизируются градиентным спуском;
+траектория потерь показывает, что $J$ эффективно минимизируется
+стандартными средствами JAX и может быть встроен в крупные модели.
+
+\subsection{Agents and Cognitive Reset / Агенты и когнитивный сброс}
+
+\selectlanguage{english}
+The notebook \texttt{gra\_agent\_loop\_free.ipynb} illustrates how
+GRA-style cognitive reset prevents unbounded growth of internal
+agent memory. A pair of simple counting agents accumulate internal
+state over several steps, after which a global reset is applied,
+forcing the system back into a low-entropy configuration.
+
+\selectlanguage{russian}
+В ноутбуке \texttt{gra\_agent\_loop\_free.ipynb} показано, как
+GRA-подобный когнитивный сброс предотвращает неограниченный рост
+внутренней памяти агентов. Пара простых счётчиков накапливают
+состояние в течение нескольких шагов, после чего применяется
+глобальный сброс, возвращающий систему в низкоэнтропийную
+конфигурацию.
+
+\section{Conclusion / Заключение}
+
+\selectlanguage{english}
+GRA-Core is intended as a reference implementation of multiverse
+nullification ideas, suitable both for experimentation and for
+integration into larger systems. The NumPy and JAX layers make the
+foam functional accessible as a drop-in regularizer or stability prior
+for large models, while the fractal context and agent runtime
+illustrate how the same principle can organize language and behaviour.
+
+\selectlanguage{russian}
+GRA-Core задуман как эталонная реализация идей мультиверсного
+обнуления, пригодная как для экспериментирования, так и для
+интеграции в более крупные системы. NumPy- и JAX-слои делают
+функционал пены удобным как plug-in регуляризатор или стабилизирующий
+prior для больших моделей, а фрактальный контекст и агентный рантайм
+показывают, как тот же принцип может структурировать язык и поведение.
+
+% Optional bibliography can be added here.
+
+\end{document}
